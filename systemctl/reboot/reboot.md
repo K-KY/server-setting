@@ -38,6 +38,15 @@ sudo systemctl enable --now periodic-reboot.timer
 ```
 - 적용
 
+### 타임존 설정
+
+```text
+timedatectl
+sudo timedatectl set-timezone Asia/Seoul
+```
+- 한국 사니까 서울로 설정
+- 
+
 ```
 systemctl list-timers
 ```
