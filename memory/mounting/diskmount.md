@@ -78,4 +78,27 @@ UUID={UUID}  /mnt/data   ext4   defaults   0   2
 - fstab 파일에 추가
 
 -------
-# 끝
+
+# 디스크 마운트 용량 추가
+```text
+  Usage of /:   7.9% of 97.87GB   Processes:               199
+```
+- 100기가만 마운트 되어있음
+
+## 볼륨 사이즈 확인
+```text
+sudo lvdisplay
+```
+
+## 볼륨 사이즈 추가
+```text
+sudo lvextend -L +100G {LV Path}
+```
+
+## 파일 시스템 확장
+```text
+sudo resize2fs $(findmnt -no SOURCE /)
+
+df -h / #용량 확인
+```
+- 
