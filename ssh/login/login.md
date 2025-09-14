@@ -27,3 +27,17 @@ sudo ufw reload
 cat ~/.ssh/id_rsa.pub | ssh 사용자@서버_IP "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
 ```
 
+
+# 만약 호스트가 바뀐경우
+```text
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+```
+- 많이 생략하긴 했는데 대부분 이런 내용이 나올거
+
+```text
+ssh-keygen -R 서버_ip
+```
+- 저장된 키를 삭제하고 다시 접속하면 됨
