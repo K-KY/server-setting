@@ -7,6 +7,12 @@
 sudo mkdir -p {location} && docker run --rm -v "$PWD":/work -w /work \
 linuxserver/ffmpeg:version-8.0-cli -i {fileName} -codec copy \
 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls {location/result.m3u8}
+
+docker run --rm -v "$PWD":/work -w /work \
+linuxserver/ffmpeg:version-8.0-cli -i 2025-08-27-00-23-42.mov -codec copy \
+-start_number 0 -hls_time 10 -hls_list_size 0 -f hls hls/output.m3u8
+
+
 ```
 
 ## cut time to time
