@@ -36,3 +36,63 @@ RestartSec=5s
 - sudo systemctl restart ssh
 - 재시작
 - 재부팅 후 지정 ip로 ssh 진입 성공 했지만 내부 와이파이랑 연결 되어있어서 성공 했을 가능성 있음
+
+# 위 방법으로 해결 할 수 없었음
+
+```
+#!/bin/bash
+TARGET_IP="100.75.33.73"
+SSH_CMD="/usr/sbin/sshd"
+MAX_RETRIES=0      # 0이면 무한 반복
+SLEEP_INTERVAL=60  # 1분 간격
+
+echo "[sshd-wait] Starting bind check for IP $TARGET_IP"
+
+retry=0
+while [ $MAX_RETRIES -eq 0 ] || [ $retry -lt $MAX_RETRIES ]; do
+    if ip addr show | grep -q "$TARGET_IP"; then
+        echo "[sshd-wait] IP $TARGET_IP found, starting sshd..."
+        $SSH_CMD
+        if [ $? -eq 0 ]; then
+            echo "[sshd-wait] sshd started successfully, exiting script."
+            exit 0
+        else
+            echo "[sshd-wait] sshd failed to start, retrying in $SLEEP_INTERVAL seconds..."
+        fi
+    else
+        echo "[sshd-wait] IP $TARGET_IP not found, waiting $SLEEP_INTERVAL seconds..."
+    fi
+    sleep $SLEEP_INTERVAL
+    ((retry++))
+done
+
+echo "[sshd-wait] Maximum retries reached, exiting."
+exit 1
+```
+- /usr/local/bin/ 에 쉘 파일 생성
+  - 실행권한 부여
+- 부팅시 실행 파일로 설정
+```
+[Unit]
+Description=Wait for Tailscale IP and start SSH
+After=network.target tailscaled.service
+Wants=network.target tailscaled.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/sshd-bind-wait.sh
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
+```
+- /etc/systemd/system/ 경로에 위 내용 name.service로 저장
+```
+sudo systemctl daemon-reload
+sudo systemctl enable name.service
+sudo systemctl start name.service
+```
+
+- 부팅 시 실행되고 연결 될 때까지 주기적으로 무한 반복
+- 연결시 종료 되는 shell로 변경
