@@ -5,7 +5,7 @@
   - 재부팅 -> ssh시작 -> tailscale 시작
   - 실제로 다시 ssh를 재시작 하면 ip가 정상적으로 바인딩 됨
 
-## 해결
+## 해결 xxxx
 
 - `sudo systemctl edit sshd.service` 수정
 
@@ -96,3 +96,5 @@ sudo systemctl start name.service
 
 - 부팅 시 실행되고 연결 될 때까지 주기적으로 무한 반복
 - 연결시 종료 되는 shell로 변경
+
+#### 해결
